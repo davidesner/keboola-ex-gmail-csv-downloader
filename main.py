@@ -26,11 +26,12 @@ PAR_SINCE_LAST = "sinceLast"
 KEY_SEPARATOR = "separator"
 KEY_PREFIX = "prefix"
 KEY_PKEY = "pkey"
+KEY_TABLE_NAME = "tableName"
 KEY_HEADER = "header"
 KEY_LAST_RUN="lastRun"
 
 
-DATA_PATH = '/data/'
+DATA_PATH = 'C:\\Users\\esner\\Documents\\Prace\\PROJECTS\\Matejkys\\data'
 PAR_OUT_TABLES_PATH = os.path.join(DATA_PATH, 'out', 'tables')
 TEMP_FOLDER_PATH = os.path.join(DATA_PATH,'tmp')
 MANDATORY_PARAMS = [PAR_BUCKET, PAR_USER, PAR_QUERY, PAR_FILE_MAPPING]
@@ -141,6 +142,7 @@ def processFilesWithPrefix(inputFolderPath, fileMapping, outputFolderPath, outBu
     prefix = fileMapping.get(KEY_PREFIX)
     outputSlicedFolder = outputFolderPath + os.sep + fileMapping.get(KEY_PREFIX)
     header = fileMapping.get(KEY_HEADER).split(fileMapping.get(KEY_SEPARATOR))
+    outPutTableName = fileMapping.get(KEY_TABLE_NAME) if fileMapping.get(KEY_TABLE_NAME) else prefix
 
     for i in os.listdir(inputFolderPath):
         if os.path.isfile(os.path.join(inputFolderPath,i)) and prefix in i:
@@ -149,7 +151,7 @@ def processFilesWithPrefix(inputFolderPath, fileMapping, outputFolderPath, outBu
     for file in files:
         prepareSlicedTable(file, inputFolderPath, outputSlicedFolder, encoding, header)
     # create manifest
-    write_table_manifest(outputSlicedFolder, outBucket+'.'+prefix, header, fileMapping.get(KEY_PKEY))
+    write_table_manifest(outputSlicedFolder, outBucket+'.'+outPutTableName, header, fileMapping.get(KEY_PKEY))
 
 
 
