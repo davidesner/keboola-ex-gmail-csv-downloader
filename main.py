@@ -121,6 +121,9 @@ def removeHeaderFromFileAndMove(inputFile, outputFile, encoding):
 def prepareSlicedTable(inputFileName, inputFolderPath, outputFolderPath, encoding, header):
     inputFile = inputFolderPath + os.sep + inputFileName
     outputFile = outputFolderPath + os.sep + inputFileName
+    
+    if not os.path.exists(outputFolderPath):
+        os.makedirs(outputFolderPath)
 
     newHeader = header
     if not header:
