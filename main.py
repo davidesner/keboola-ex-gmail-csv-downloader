@@ -75,6 +75,7 @@ def write_table_manifest(
             file_name,
             destination,
             columns,
+            delimiter=',',
             primary_key=None):
         """
         Write manifest for output table Manifest is used for
@@ -91,7 +92,8 @@ def write_table_manifest(
             'destination': destination,
             'primary_key': primary_key,
             'columns' : columns,
-            'incremental' : True
+            'incremental' : True,
+            'delimiter:': delimiter
         }
         with open(file_name + '.manifest', 'w') as manifest_file:
             json.dump(manifest, manifest_file)
@@ -151,7 +153,7 @@ def processFilesWithPrefix(inputFolderPath, fileMapping, outputFolderPath, outBu
     for file in files:
         prepareSlicedTable(file, inputFolderPath, outputSlicedFolder, encoding, header)
     # create manifest
-    write_table_manifest(outputSlicedFolder, outBucket+'.'+outPutTableName, header, fileMapping.get(KEY_PKEY))
+    write_table_manifest(outputSlicedFolder, outBucket+'.'+outPutTableName, header, fileMapping.get(KEY_SEPARATOR), fileMapping.get(KEY_PKEY))
 
 
 
