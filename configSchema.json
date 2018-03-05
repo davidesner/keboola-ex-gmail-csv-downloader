@@ -1,0 +1,136 @@
+{
+	"title": "GMAIL zip attachment extractor configuration",
+	"type": "object",
+	"properties": {
+		"q": {
+			"type": "string",
+			"title": "Gmail search query. e.g. subject:Mail with attachment. See more at https://developers.google.com/gmail/api/guides/filtering",
+			"propertyOrder": 500
+		},
+		"user": {
+			"type": "string",
+			"title": "GMAIL user name. e.g. myuser@gmail.com",
+			"propertyOrder": 600
+		},
+		"compression": {
+			"type": "string",
+			"propertyOrder": 700,
+			"title": "File compression",
+			"description": "Determines the compression type.",
+			"enum": [
+				"ZIP"
+			],
+			"default": "ZIP",
+			"options": {
+				"enum_titles": [
+					"Zip"
+				]
+			}
+		},
+		
+					"sinceLast": {
+						"propertyOrder": 1000,
+						"type": "number",
+						"title": "Continue since last run",
+						"description": "Flag whether to download only emails that were added since the last run. If set to No all matching files in the repository will be downloaded.",
+						"enum": [
+							1,
+							0
+						],
+						"default": 1,
+						"options": {
+							"enum_titles": [
+								"Yes",
+								"No"
+							]
+						}
+					},
+"kbc_bucket": {
+						"propertyOrder":1600,
+						"type": "string",
+						"title": "Bucket name",
+						"description": "Storage bucket where the table will be uploaded (e.g. out.c-main)."
+					},
+		"fileMapping": {
+			"type": "array",
+			"title": "Files in archive to download",
+			"items": {
+				"type": "object",
+				"title": "Table",
+				"properties": {
+					"tableName": {
+						"propertyOrder": 3000,
+						"type": "string",
+						"title": "Table name",
+						"description": "Storage table where the result will be uploaded (e.g. mytable)."
+					},
+										"prefix": {
+						"propertyOrder": 5000,
+						"type": "string",
+						"title": "Filename prefix",
+						"description": "Download only files starting with specified prefix. Merge them into one table."
+					},
+					"header": {
+						"propertyOrder": 5500,
+						"type": "string",
+						"title": "File header",
+						"description": "File header. If specified, all files with prefix are expected to not contain header. If empty, header in files are expected. Delimiter must match the one specified and the number of columns must match exactly the source file!"
+					},
+					"incremental": {
+						"propertyOrder": 6000,
+						"title": "Storage upload mode",
+						"description": "Incremental upload will append data to existing tables. Full upload will replace the contents of target table.",
+						"type": "number",
+						"enum": [
+							0,
+							1
+						],
+						"default": 1,
+						"options": {
+							"enum_titles": [
+								"Full",
+								"Incremental"
+							]
+						}
+					},
+					"pkey": {
+						"propertyOrder": 7000,
+						"title": "Primary Key",
+						"type": "array",
+						"description": "Names of primary key columns.",
+						"items": {
+							"type": "string",
+							"title": "Column name"
+						},
+						"default": null,
+						"uniqueItems": true
+					},
+					"separator": {
+						"propertyOrder": 8000,
+						"type": "string",
+						"title": "CSV Delimiter",
+						"description": "Delimiter used in remote CSV files",
+						"default": ","
+					}
+				},
+				"required": [
+					"incremental",
+					"pkey",
+					"separator",
+					"pkey",
+					"prefix",
+					"tableName",					
+					"header"
+				]
+			}
+		}
+	},
+	"required": [
+		"q",
+		"user",
+		"compression",
+		"fileMapping",
+		"sinceLast",
+"kbc_bucket"
+	]
+}

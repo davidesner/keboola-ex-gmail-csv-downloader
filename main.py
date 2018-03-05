@@ -2,7 +2,6 @@ from keboola import docker
 
 import ex.gmail.client as gmail
 import ex.archive.processor as archive_processor
-import pip, zipfile, csv, pprint
 import logging
 import json
 import sys
@@ -17,11 +16,11 @@ PAR_BUCKET = "kbc_bucket"
 PAR_USER = "user"
 PAR_QUERY = "q"
 PAR_CLIENT_ID = "client_id"
-PAR_CLIENT_ID = "client_id"
 PAR_CLIENT_SECRET = "#client_secret"
 PAR_REFRESH_TOKEN = "#refresh_token"
 PAR_FILE_MAPPING = "fileMapping"
 PAR_SINCE_LAST = "sinceLast"
+PAR_INCREMENTAL = "incremental"
 
 KEY_SEPARATOR = "separator"
 KEY_PREFIX = "prefix"
@@ -31,7 +30,7 @@ KEY_HEADER = "header"
 KEY_LAST_RUN="lastRun"
 
 
-DATA_PATH = '/data/'
+DATA_PATH = 'C:\\Users\\esner\\Documents\\Prace\\PROJECTS\\Matejkys\\data'
 PAR_OUT_TABLES_PATH = os.path.join(DATA_PATH, 'out', 'tables')
 TEMP_FOLDER_PATH = os.path.join(DATA_PATH,'tmp')
 MANDATORY_PARAMS = [PAR_BUCKET, PAR_USER, PAR_QUERY, PAR_FILE_MAPPING]
@@ -76,7 +75,8 @@ def write_table_manifest(
             destination,
             columns,
             delimiter=',',
-            primary_key=None):
+            primary_key=None,
+            incremental = True):
         """
         Write manifest for output table Manifest is used for
         the table to be stored in KBC Storage.
@@ -88,6 +88,7 @@ def write_table_manifest(
         """
         primary_key = primary_key or []
         columns = columns or []
+        increment = True if incremental else False
         manifest = {
             'destination': destination,
             'primary_key': primary_key,
@@ -134,7 +135,7 @@ def prepareSlicedTable(inputFileName, inputFolderPath, outputFolderPath, encodin
         newHeader = removeHeaderFromFileAndMove(inputFile, outputFile, encoding)
     else:
         if os.path.isfile(outputFile):
-             os.remove(outputFile)
+            os.remove(outputFile)
         shutil.move(inputFile, outputFile)
     return newHeader
 
@@ -153,7 +154,8 @@ def processFilesWithPrefix(inputFolderPath, fileMapping, outputFolderPath, outBu
     for file in files:
         prepareSlicedTable(file, inputFolderPath, outputSlicedFolder, encoding, header)
     # create manifest
-    write_table_manifest(outputSlicedFolder, outBucket+'.'+outPutTableName, header, fileMapping.get(KEY_SEPARATOR), fileMapping.get(KEY_PKEY))
+    write_table_manifest(outputSlicedFolder, outBucket+'.'+outPutTableName, header, fileMapping.get(KEY_SEPARATOR), 
+                         fileMapping.get(KEY_PKEY), fileMapping.get(PAR_INCREMENTAL))
 
 
 
@@ -170,7 +172,7 @@ appKey = cfg.get_oauthapi_appkey()
 
 lastState = loadStateFile()
 since = None
-if lastState and params.get(PAR_SINCE_LAST) in ['True','1']:
+if lastState and params.get(PAR_SINCE_LAST) in ['True',1]:
     since = lastState.get(KEY_LAST_RUN)
 
 
@@ -179,7 +181,7 @@ try:
     gmailClient  =  gmail.Client(appKey, appSecret, oauthData.get('refresh_token'), params[PAR_USER], params[PAR_QUERY], logging)
     attachments = gmailClient.downloadAttachments(since)
 except Exception as err:
-    logging.error("Error extracting attachments from Gmail " + str(err))
+    logging.error("Error extracting attachments from Gmail: " + str(err))
     sys.exit(1)
 
 if attachments:

@@ -34,8 +34,13 @@ class Client:
         messages = self.get_messages(access_token, self.user, self.query)
         
         attachments = []
-        if not messages or messages['resultSizeEstimate'] == 0:
+        if not messages or messages.get("error"):
+            err = messages.get("error")
+            raise Exception(str(err.get("message")) + " Code: " + str(err.get("code")));
+        elif messages['resultSizeEstimate'] == 0:
             return attachments
+        
+        
         
         for message in messages['messages']:
             message_body = self.get_message(access_token, self.user, message['id'])
