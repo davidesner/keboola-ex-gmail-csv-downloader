@@ -21,6 +21,7 @@ PAR_CLIENT_ID = "client_id"
 PAR_CLIENT_SECRET = "#client_secret"
 PAR_REFRESH_TOKEN = "#refresh_token"
 PAR_FILE_MAPPING = "fileMapping"
+PAR_SINCE_LAST = "sinceLast"
 
 KEY_SEPARATOR = "separator"
 KEY_PREFIX = "prefix"
@@ -165,7 +166,7 @@ appKey = cfg.get_oauthapi_appkey()
 
 lastState = loadStateFile()
 since = None
-if lastState:
+if lastState and params.get(PAR_SINCE_LAST) in ['True','1']:
     since = lastState.get(KEY_LAST_RUN)
 
 
