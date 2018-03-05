@@ -93,7 +93,7 @@ def write_table_manifest(
             'primary_key': primary_key,
             'columns' : columns,
             'incremental' : True,
-            'delimiter:': delimiter
+            'delimiter': delimiter
         }
         with open(file_name + '.manifest', 'w') as manifest_file:
             json.dump(manifest, manifest_file)
