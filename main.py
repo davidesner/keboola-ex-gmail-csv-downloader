@@ -23,6 +23,7 @@ PAR_SINCE_LAST = "sinceLast"
 PAR_INCREMENTAL = "incremental"
 
 KEY_SEPARATOR = "separator"
+KEY_ENCLOSURE = "enclosure"
 KEY_PREFIX = "prefix"
 KEY_PKEY = "pkey"
 KEY_TABLE_NAME = "tableName"
@@ -75,6 +76,7 @@ def write_table_manifest(
             destination,
             columns,
             delimiter=',',
+            enclosure='"',
             primary_key=None,
             incremental = True):
         """
@@ -94,7 +96,8 @@ def write_table_manifest(
             'primary_key': primary_key,
             'columns' : columns,
             'incremental' : True,
-            'delimiter': delimiter
+            'delimiter': delimiter,
+            "enclosure" : enclosure
         }
         with open(file_name + '.manifest', 'w') as manifest_file:
             json.dump(manifest, manifest_file)
@@ -155,7 +158,7 @@ def processFilesWithPrefix(inputFolderPath, fileMapping, outputFolderPath, outBu
         prepareSlicedTable(file, inputFolderPath, outputSlicedFolder, encoding, header)
     # create manifest
     write_table_manifest(outputSlicedFolder, outBucket+'.'+outPutTableName, header, fileMapping.get(KEY_SEPARATOR), 
-                         fileMapping.get(KEY_PKEY), fileMapping.get(PAR_INCREMENTAL))
+                         fileMapping.get(KEY_ENCLOSURE), fileMapping.get(KEY_PKEY), fileMapping.get(PAR_INCREMENTAL))
 
 
 
