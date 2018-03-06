@@ -31,7 +31,7 @@ KEY_HEADER = "header"
 KEY_LAST_RUN="lastRun"
 
 
-DATA_PATH = '/data/'
+DATA_PATH = os.environ['KBC_DATADIR']
 PAR_OUT_TABLES_PATH = os.path.join(DATA_PATH, 'out', 'tables')
 TEMP_FOLDER_PATH = os.path.join(DATA_PATH,'tmp')
 MANDATORY_PARAMS = [PAR_BUCKET, PAR_USER, PAR_QUERY, PAR_FILE_MAPPING]

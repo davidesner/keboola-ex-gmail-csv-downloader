@@ -111,6 +111,13 @@
 						"title": "CSV Delimiter",
 						"description": "Delimiter used in remote CSV files",
 						"default": ","
+					},
+					"enclosure": {
+						"propertyOrder": 9000,
+						"type": "string",
+						"title": "CSV Enclosure",
+						"description": "Enclosure for values used in remote CSV files",
+						"default": "\""
 					}
 				},
 				"required": [
@@ -120,7 +127,8 @@
 					"pkey",
 					"prefix",
 					"tableName",					
-					"header"
+					"header",
+					"enclosure"
 				]
 			}
 		}
